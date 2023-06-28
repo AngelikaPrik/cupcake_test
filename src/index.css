@@ -3,3 +3,45 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #1d1d1d;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+table {
+  border-radius: 10px;
+  overflow: hidden;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  width: 100%;
+  border: 2px solid #0f0f0f;
+  text-align: left;
+  background: #343434;
+  color: #fff;
+  font-weight: 500;
+}
+
+th,
+td {
+  padding: 1rem 2rem;
+}
+
+th {
+  background: #0f0f0f;
+}
+
+.profitable {
+  background: #086f94;
+}
