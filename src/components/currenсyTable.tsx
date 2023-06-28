@@ -1,4 +1,9 @@
-export const CurrencyTable = () => {
+import { IMarketDataType } from '../types'
+
+const currencyTitle = ['RUB/CUPCAKE', 'USD/CUPCAKE', 'EUR/CUPCAKE']
+
+export const CurrencyTable = (props: PropsType) => {
+  const { data, minValue } = props
   return (
     <table>
       <thead>
@@ -10,24 +15,16 @@ export const CurrencyTable = () => {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>RUB/CUPCAKE</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <td>USD/CUPCAKE</td>
-          <td className='profitable'>0</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <td>EUR/CUPCAKE</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
+        {currencyTitle.map((cur, i) => (
+          <tr key={i}>
+            <td>{cur}</td>
+            {data[cur as keyof IMarketDataType].map((num, i) => (
+              <td className={num === minValue ? 'minimum' : ''} key={i}>
+                {num}
+              </td>
+            ))}
+          </tr>
+        ))}
         <tr>
           <td>RUB/USD</td>
           <td>0</td>
@@ -49,4 +46,9 @@ export const CurrencyTable = () => {
       </tbody>
     </table>
   )
+}
+
+interface PropsType {
+  data: IMarketDataType
+  minValue: number | null
 }
