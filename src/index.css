@@ -33,6 +33,7 @@ td {
   font-weight: 500;
 }
 
+
 th,
 td {
   padding: 1rem 2rem;
@@ -42,6 +43,6 @@ th {
   background: #0f0f0f;
 }
 
-.profitable {
-  background: #086f94;
+.minimum {
+  background: #0573aa;
 }
