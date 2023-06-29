@@ -24,24 +24,6 @@ export const CurrencyTable = (props: PropsType) => {
             ))}
           </tr>
         ))}
-        <tr>
-          <td>RUB/USD</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <td>RUB/EUR</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <td>EUR/RUB</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
       </tbody>
     </table>
   )
