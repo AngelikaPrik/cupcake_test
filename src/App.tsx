@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { CurrencyTable } from './components/currenсyTable'
 import { usePollingUpdate } from './hooks/usePolling'
-import { DataResponse, MarketDataType } from './types'
+import { DataResponse, MarketDataType } from './types';
 import { findMinValue, roundValues } from './utils'
 
 const initialState: MarketDataType<number[]> = {
@@ -31,27 +31,42 @@ function App() {
 
   const getData = async (endpointPoll = '') => {
     try {
-      const responses = await Promise.all(
+      const responses = await Promise.allSettled(
         endpoints.map(endpoint =>
           axios.get<DataResponse>(endpoint + endpointPoll)
         )
       )
 
+      const fullfiledData = responses.filter(
+        ({ status }) => status === 'fulfilled'
+      ) as unknown as PromiseFulfilledResult<DataResponse>[]
+
       const data: MarketDataType<number[]> = {
-        'RUB/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.RUB)),
-        'USD/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.USD)),
-        'EUR/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.EUR)),
+        'RUB/CUPCAKE': roundValues(
+          fullfiledData.map(({ value }) => value.data.rates.RUB)
+        ),
+        'USD/CUPCAKE': roundValues(
+          fullfiledData.map(({ value }) => value.data.rates.USD)
+        ),
+        'EUR/CUPCAKE': roundValues(
+          fullfiledData.map(({ value }) => value.data.rates.EUR)
+        ),
         'RUB/USD': roundValues(
-          responses.map(({ data }) => data.rates.RUB / data.rates.USD)
+          fullfiledData.map(
+            ({ value }) => value.data.rates.RUB / value.data.rates.USD
+          )
         ),
         'RUB/EUR': roundValues(
-          responses.map(({ data }) => data.rates.RUB / data.rates.EUR)
+          fullfiledData.map(
+            ({ value }) => value.data.rates.RUB / value.data.rates.EUR
+          )
         ),
         'EUR/USD': roundValues(
-          responses.map(({ data }) => data.rates.EUR / data.rates.USD)
+          fullfiledData.map(
+            ({ value }) => value.data.rates.EUR / value.data.rates.USD
+          )
         ),
       }
-
       setMarketData(data)
       setMinValues(findMinValue(data))
     } catch (error) {

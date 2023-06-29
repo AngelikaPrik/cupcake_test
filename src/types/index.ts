@@ -7,7 +7,7 @@ export interface MarketDataType<T> {
   'EUR/USD': T
 }
 
-export interface DataResponse {
+export interface DataValueResponse {
   rates: {
     RUB: number
     USD: number
@@ -16,4 +16,9 @@ export interface DataResponse {
   base: string
   timestamp: number
   date: string
+}
+
+export interface DataResponse {
+  data: DataValueResponse
+  status: 'fulfilled' | 'rejected'
 }
