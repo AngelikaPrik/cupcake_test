@@ -27,14 +27,16 @@ function App() {
         endpoints.map(endpoint => axios.get(endpoint + endpointPoll))
       )
 
-      const data: IMarketDataType = {
-        'RUB/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.RUB)),
-        'USD/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.USD)),
-        'EUR/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.EUR)),
-      }
+      if (responses.every(({ status }) => status === 200)) {
+        const data: IMarketDataType = {
+          'RUB/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.RUB)),
+          'USD/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.USD)),
+          'EUR/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.EUR)),
+        }
 
-      setMarketData(data)
-      setMinValue(findMinValue(data))
+        setMarketData(data)
+        setMinValue(findMinValue(data))
+      }
     } catch (error) {
       console.error('Не удалось получить данные')
     }
