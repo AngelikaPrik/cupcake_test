@@ -27,7 +27,7 @@ function App() {
         endpoints.map(endpoint => axios.get(endpoint + endpointPoll))
       )
 
-      const data = {
+      const data: IMarketDataType = {
         'RUB/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.RUB)),
         'USD/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.USD)),
         'EUR/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.EUR)),
