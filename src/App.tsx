@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { CurrencyTable } from './components/currenсyTable'
 import { usePollingUpdate } from './hooks/usePolling'
-import { IMarketDataType } from './types'
+import { DataResponse, MarketDataType } from './types'
 import { findMinValue, roundValues } from './utils'
 
-const initialState: IMarketDataType = {
+const initialState: MarketDataType = {
   'RUB/CUPCAKE': [0, 0, 0],
   'USD/CUPCAKE': [0, 0, 0],
   'EUR/CUPCAKE': [0, 0, 0],
@@ -21,34 +21,40 @@ const endpoints = [
 ]
 
 function App() {
-  const [marketData, setMarketData] = useState<IMarketDataType>(initialState)
+  const [marketData, setMarketData] = useState<MarketDataType>(initialState)
   const [minValue, setMinValue] = useState<number | null>(null)
 
   const getData = async (endpointPoll = '') => {
     try {
       const responses = await Promise.all(
-        endpoints.map(endpoint => axios.get(endpoint + endpointPoll))
+        endpoints.map(endpoint =>
+          axios.get<DataResponse>(endpoint + endpointPoll)
+        )
       )
 
-      if (responses.every(({ status }) => status === 200)) {
-        const data: IMarketDataType = {
-          'RUB/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.RUB)),
-          'USD/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.USD)),
-          'EUR/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.EUR)),
-          'RUB/USD': roundValues(responses.map(({ data }) => data.rates.RUB / data.rates.USD)),
-          'RUB/EUR': roundValues(responses.map(({ data }) => data.rates.RUB / data.rates.EUR)),
-          'EUR/USD': roundValues(responses.map(({ data }) => data.rates.EUR / data.rates.USD)),
-        }
-
-        setMarketData(data)
-        setMinValue(findMinValue(data))
+      const data: MarketDataType = {
+        'RUB/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.RUB)),
+        'USD/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.USD)),
+        'EUR/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.EUR)),
+        'RUB/USD': roundValues(
+          responses.map(({ data }) => data.rates.RUB / data.rates.USD)
+        ),
+        'RUB/EUR': roundValues(
+          responses.map(({ data }) => data.rates.RUB / data.rates.EUR)
+        ),
+        'EUR/USD': roundValues(
+          responses.map(({ data }) => data.rates.EUR / data.rates.USD)
+        ),
       }
+
+      setMarketData(data)
+      setMinValue(findMinValue(data))
     } catch (error) {
       console.error('Не удалось получить данные')
     }
   }
 
-  usePollingUpdate(() => getData('/poll'), 5000)
+  usePollingUpdate(() => getData('/poll'), 4000)
 
   useEffect(() => {
     getData()
