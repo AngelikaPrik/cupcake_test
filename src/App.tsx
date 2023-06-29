@@ -5,13 +5,22 @@ import { usePollingUpdate } from './hooks/usePolling'
 import { DataResponse, MarketDataType } from './types'
 import { findMinValue, roundValues } from './utils'
 
-const initialState: MarketDataType = {
+const initialState: MarketDataType<number[]> = {
   'RUB/CUPCAKE': [0, 0, 0],
   'USD/CUPCAKE': [0, 0, 0],
   'EUR/CUPCAKE': [0, 0, 0],
   'RUB/USD': [0, 0, 0],
   'RUB/EUR': [0, 0, 0],
   'EUR/USD': [0, 0, 0],
+}
+
+const initialMinValuesState: MarketDataType<number> = {
+  'RUB/CUPCAKE': 0,
+  'USD/CUPCAKE': 0,
+  'EUR/CUPCAKE': 0,
+  'RUB/USD': 0,
+  'RUB/EUR': 0,
+  'EUR/USD': 0,
 }
 
 const endpoints = [
@@ -21,8 +30,10 @@ const endpoints = [
 ]
 
 function App() {
-  const [marketData, setMarketData] = useState<MarketDataType>(initialState)
-  const [minValue, setMinValue] = useState<number | null>(null)
+  const [marketData, setMarketData] = useState<MarketDataType<number[]>>(initialState)
+  const [minValues, setMinValues] = useState<MarketDataType<number>>(
+    initialMinValuesState
+  )
 
   const getData = async (endpointPoll = '') => {
     try {
@@ -32,7 +43,7 @@ function App() {
         )
       )
 
-      const data: MarketDataType = {
+      const data: MarketDataType<number[]> = {
         'RUB/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.RUB)),
         'USD/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.USD)),
         'EUR/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.EUR)),
@@ -48,7 +59,7 @@ function App() {
       }
 
       setMarketData(data)
-      setMinValue(findMinValue(data))
+      setMinValues(findMinValue(data))
     } catch (error) {
       console.error('Не удалось получить данные')
     }
@@ -62,7 +73,7 @@ function App() {
 
   return (
     <div className='container'>
-      <CurrencyTable data={marketData} minValue={minValue} />
+      <CurrencyTable data={marketData} minValues={minValues} />
     </div>
   )
 }
