@@ -1,4 +1,4 @@
-import { IMarketDataType } from '../types'
+import { MarketDataType } from '../types'
 
 export const CurrencyTable = (props: PropsType) => {
   const { data, minValue } = props
@@ -17,7 +17,7 @@ export const CurrencyTable = (props: PropsType) => {
         {Object.keys(data).map(key => (
           <tr key={key}>
             <td>{key}</td>
-            {data[key as keyof IMarketDataType].map((num, i) => (
+            {data[key as keyof MarketDataType].map((num, i) => (
               <td className={num === minValue ? 'minimum' : ''} key={i}>
                 {num}
               </td>
@@ -30,6 +30,6 @@ export const CurrencyTable = (props: PropsType) => {
 }
 
 interface PropsType {
-  data: IMarketDataType
+  data: MarketDataType
   minValue: number | null
 }
