@@ -14,14 +14,7 @@ const initialState: MarketDataType<number[]> = {
   'EUR/USD': [0, 0, 0],
 }
 
-const initialMinValuesState: MarketDataType<number> = {
-  'RUB/CUPCAKE': 0,
-  'USD/CUPCAKE': 0,
-  'EUR/CUPCAKE': 0,
-  'RUB/USD': 0,
-  'RUB/EUR': 0,
-  'EUR/USD': 0,
-}
+const initialMinValuesState = {} as MarketDataType<number>
 
 const endpoints = [
   'http://localhost:3000/api/v1/first',
@@ -30,7 +23,8 @@ const endpoints = [
 ]
 
 function App() {
-  const [marketData, setMarketData] = useState<MarketDataType<number[]>>(initialState)
+  const [marketData, setMarketData] =
+    useState<MarketDataType<number[]>>(initialState)
   const [minValues, setMinValues] = useState<MarketDataType<number>>(
     initialMinValuesState
   )
