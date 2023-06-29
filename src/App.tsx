@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { CurrencyTable } from './components/currenсyTable'
 import { usePollingUpdate } from './hooks/usePolling'
@@ -12,21 +12,21 @@ const initialState: IMarketDataType = {
 }
 
 const endpoints = [
-  'http://localhost:3000/api/v1/first/poll',
-  'http://localhost:3000/api/v1/second/poll',
-  'http://localhost:3000/api/v1/third/poll',
+  'http://localhost:3000/api/v1/first',
+  'http://localhost:3000/api/v1/second',
+  'http://localhost:3000/api/v1/third',
 ]
 
 function App() {
   const [marketData, setMarketData] = useState<IMarketDataType>(initialState)
   const [minValue, setMinValue] = useState<number | null>(null)
 
-  const getData = async () => {
+  const getData = async (endpointPoll = '') => {
     try {
       const responses = await Promise.all(
-        endpoints.map(endpoint => axios.get(endpoint))
+        endpoints.map(endpoint => axios.get(endpoint + endpointPoll))
       )
-      
+
       const data = {
         'RUB/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.RUB)),
         'USD/CUPCAKE': roundValues(responses.map(({ data }) => data.rates.USD)),
@@ -40,7 +40,11 @@ function App() {
     }
   }
 
-  usePollingUpdate(getData, 5000)
+  usePollingUpdate(() => getData('/poll'), 5000)
+
+  useEffect(() => {
+    getData()
+  }, [])
 
   return (
     <div className='container'>
