@@ -1,6 +1,6 @@
 import { IMarketDataType } from '../types'
 
-const currencyTitle = ['RUB/CUPCAKE', 'USD/CUPCAKE', 'EUR/CUPCAKE']
+const currencyTitle: (keyof IMarketDataType)[] = [ 'RUB/CUPCAKE', 'USD/CUPCAKE', 'EUR/CUPCAKE']
 
 export const CurrencyTable = (props: PropsType) => {
   const { data, minValue } = props
@@ -15,10 +15,10 @@ export const CurrencyTable = (props: PropsType) => {
         </tr>
       </thead>
       <tbody>
-        {currencyTitle.map((cur, i) => (
+        {currencyTitle.map((title, i) => (
           <tr key={i}>
-            <td>{cur}</td>
-            {data[cur as keyof IMarketDataType].map((num, i) => (
+            <td>{title}</td>
+            {data[title].map((num, i) => (
               <td className={num === minValue ? 'minimum' : ''} key={i}>
                 {num}
               </td>
